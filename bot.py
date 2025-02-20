@@ -108,7 +108,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 # Главная функция
 def main():
     # Вставьте сюда токен, который вы получили от @BotFather
-    TOKEN = '7463604205:AAFX7fk2JTk3UHrZQp0NBl9w9KOfebVBXd0'
+    TOKEN = '8174740222:AAFXj35riRMhfGf8ATDXMcOAJ9KlJ9ZoBlY'
 
     # Создаем объект Application и передаем ему токен вашего бота.
     application = Application.builder().token(TOKEN).build()
