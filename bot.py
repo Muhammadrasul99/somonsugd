@@ -17,13 +17,24 @@ try:
 except Exception as e:
     logger.error(f"Ошибка при загрузке данных из data.csv: {e}")
 
+# Функция для загрузки данных о товарах из products.csv
+def load_product_data():
+    try:
+        product_data = pd.read_csv('products.csv', encoding='latin1', delimiter=';')
+        logger.info("Данные о товарах успешно загружены из products.csv")
+        return product_data
+    except Exception as e:
+        logger.error(f"Ошибка при загрузке данных о товарах из products.csv: {e}")
+        return pd.DataFrame()  # Возвращаем пустой DataFrame при ошибке
+
 
 # Функция для команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     keyboard = [
-        ["Сурогаи склад роҳ  🚚", "Сурогаи склад авиа✈️", "Нархнома 💲"],
+        ["Сурогаи склад роҳ  🚚", "Нархнома 💲"],
         ["Молҳои манъшуда ❌", "Контакт 👤"],
         ["Тафтиши трек-код 🔍", "Дарси ройгон!"]
+        ["Борҳои қабулшуда 🔍"]
     ]
 
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
@@ -38,11 +49,6 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         response = "1) AL-KH \n2)13711652794\n3) 广州市荔湾区环市西路黑山三街20号宇宙鞋城E区113-119档8 Al-Kh /Шахр/Ном ва номери телефон"
         await update.message.reply_text(response)
         await update.message.reply_photo("https://raw.githubusercontent.com/uskhurshed/cargo/master/photo_2024-10-08_19-49-26.jpg")
-
-    if text == "Сурогаи склад авиа✈️":
-        response = "Avia / Ном ВА номери шумо \n19068507113\n浙江省 金华市 义乌市\n桥东二区34栋8号 1 avia Al-Kh / Шахр Ном ВА немери шумо"
-        await update.message.reply_text(response)
-        await update.message.reply_photo("https://raw.githubusercontent.com/uskhurshed/cargo/master/photo_5406973989118667037_y.jpg")
 
 
     elif text == "Нархнома 💲":
@@ -66,9 +72,34 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         response = " Дарсхои ройгонро аз инчо дастрас кунед: https://t.me/somon_sugd_cargo/31"
         await update.message.reply_text(response)
 
+    elif text == "Борҳои қабулшуда 🔍":
+        response = " Рамзи худро ворид кунед: "
+        await update.message.reply_text(response)
+
     else:
         # Если текст не совпадает ни с одной из команд кнопок, считаем его трек-кодом
         await check_track_code(update, context)
+
+        
+# Предполагается, что в products.csv столбец с кодом называется "Код"
+            product_result = product_data[product_data['Код'] == product_code]
+            logger.info(f"Результат поиска товара по коду {product_code}: {product_result}")
+
+            if not product_result.empty:
+                product_info = product_result.iloc[0]
+                response = (
+                    f"Информация о товаре с кодом {product_code}:\n"
+                    f"Имя: {product_info['Имя']}\n"
+                    f"Телефон: {product_info['Телефон']}\n"
+                    f"Шт: {product_info['Шт']}\n"
+                    f"Кг: {product_info['Кг']}\n"
+                    f"Куб: {product_info['Куб']}\n"
+                    f"Сумма (TJS): {product_info['Сумма (TJS)']}"
+                )
+                await update.message.reply_text(response)
+                return
+        except ValueError:
+
 
 
 # Функция для проверки трек-кода
