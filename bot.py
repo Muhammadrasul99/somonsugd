@@ -33,7 +33,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     keyboard = [
         ["Сурогаи склад роҳ  🚚", "Нархнома 💲"],
         ["Молҳои манъшуда ❌", "Контакт 👤"],
-        ["Тафтиши трек-код 🔍", "Дарси ройгон!"]
+        ["Тафтиши трек-код 🔍", "Дарси ройгон!"],
         ["Борҳои қабулшуда 🔍"]
     ]
 
@@ -73,32 +73,34 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text(response)
 
     elif text == "Борҳои қабулшуда 🔍":
-        response = " Рамзи худро ворид кунед: "
-        await update.message.reply_text(response)
-
+        # Предлагаем ввести код из products.csv
+        await update.message.reply_text("Рамзи худро ворид кунед:")
     else:
-        # Если текст не совпадает ни с одной из команд кнопок, считаем его трек-кодом
-        await check_track_code(update, context)
+        # Здесь обрабатываем введённый текст, который может быть:
+        # - трек-кодом (data.csv)
+        # - кодом товара (products.csv)
 
-        
-# Предполагается, что в products.csv столбец с кодом называется "Код"
-            product_result = product_data[product_data['Код'] == product_code]
-            logger.info(f"Результат поиска товара по коду {product_code}: {product_result}")
+        # Попробуем сначала поискать в products.csv
+        product_data = load_product_data()
+        product_result = product_data[product_data['code'] == text]
 
-            if not product_result.empty:
-                product_info = product_result.iloc[0]
-                response = (
-                    f"Информация о товаре с кодом {product_code}:\n"
-                    f"Имя: {product_info['Имя']}\n"
-                    f"Телефон: {product_info['Телефон']}\n"
-                    f"Шт: {product_info['Шт']}\n"
-                    f"Кг: {product_info['Кг']}\n"
-                    f"Куб: {product_info['Куб']}\n"
-                    f"Сумма (TJS): {product_info['Сумма (TJS)']}"
-                )
-                await update.message.reply_text(response)
-                return
-        except ValueError:
+        if not product_result.empty:
+            # Если нашли запись в products.csv, формируем ответ
+            product_info = product_result.iloc[0]
+            response = (
+                f"Информация о товаре с кодом {text}:\n"
+                f"Имя: {product_info['name']}\n"
+                f"Телефон: {product_info['phone']}\n"
+                f"Шт: {product_info['quantity']}\n"
+                f"Кг: {product_info['weight']}\n"
+                f"Куб: {product_info['volume']}\n"
+                f"Сумма (TJS): {product_info['amount']}\n"
+                f"Дата прибытия: {product_info['arrival_date']}"
+            )
+            await update.message.reply_text(response)
+        else:
+            # Если не нашли в products.csv, проверяем data.csv (трекинг)
+            await check_track_code(update, context)
 
 
 
