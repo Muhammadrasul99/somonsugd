@@ -92,7 +92,6 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             response = f"📲 Информация о товарах для номера {text}:\n"
             for _, row in phone_result.iterrows():
                 response += (
-                    f"\n📦 Код товара: {row['code']}\n"
                     f"👤 Имя: {row['name']}\n"
                     f"📦 Шт: {row['quantity']}\n"
                     f"⚖️ Кг: {row['weight']}\n"
