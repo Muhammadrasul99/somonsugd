@@ -107,13 +107,15 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 # Функция для проверки трек-кода
 async def check_track_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    track_code = update.message.text
+    track_code = update.message.text.strip()
     logger.info(f"Получен трек-код: {track_code}")
 
+    # Проверяем, загружены ли данные
     if data.empty:
-        await update.message.reply_text("⚠️ Ошибка: База данных пустая.")
+        await update.message.reply_text("⚠️ Ошибка: База данных пустая или не загружена.")
         return
 
+    # Ищем трек-код в data.csv
     result = data[data['code'].astype(str) == track_code]
 
     if not result.empty:
