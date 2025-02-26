@@ -97,11 +97,10 @@ async def check_track_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         if status_khujand:
             response = f"📦 Бори шумо бо трек-коди {track_code} ба Хучанд омадааст."
         elif status_china:
-            response = f"📦 Бори Шумо бо трек-коди {track_code} ба склади Хитой санаи {arrival_date} кабул шудааст ва рузхои наздик ба Хучанд омада мерасад."
-        else:
-            response = f"📦 Бори шумо ҳоло бо трек-коди {track_code} ба склади Хитой кабул нашудааст."
+            response = f"📦 Бори Шумо бо трек-коди {track_code} ба склади Хитой санаи {arrival_date} кабул шудааст ва рузхои наздик ба Хучанд омада мерасад."    
     else:
-        response = "❌ Маълумот ёфт нашуд! Лутфан рақами дурустро ворид кунед."
+            response = f"📦 Бори шумо ҳоло бо трек-коди {track_code} ба склади Хитой кабул нашудааст."
+    
 
     await update.message.reply_text(response)
 
