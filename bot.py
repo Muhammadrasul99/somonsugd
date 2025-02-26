@@ -104,33 +104,37 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 # Функция для проверки трек-кода
 # Функция для проверки трек-кода
-async def check_track_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    track_code = update.message.text.strip()  # Удаляем лишние пробелы
-    logger.info(f"Получен трек-код: {track_code}")
+async def track_package(update: Update, context: CallbackContext):
+    try:
+        # Загружаем данные
+        data = pd.read_csv("data.csv", dtype=str)  # Загружаем как строки
+        print(f"Названия колонок в файле: {data.columns}")
 
-    # Выведем названия всех колонок, чтобы убедиться, что 'code' существует
-    logger.info(f"Названия колонок: {data.columns.tolist()}")
+        # Проверяем, есть ли колонка с трек-кодами
+        if "code" not in data.columns:
+            await update.message.reply_text("⚠ Ошибка! В файле нет колонки 'code'.")
+            return
 
-    # Проверяем, есть ли трек-код в базе
-    result = data[data['code'].astype(str) == track_code]
-    logger.info(f"Результат поиска: {result}")
+        # Получаем введенный пользователем текст
+        track_code = update.message.text.strip()
+        print(f"Ищем трек-код: {track_code}")
 
-    if not result.empty:
-        status_china = result['china'].values[0]
-        status_khujand = result['khujand'].values[0]
-        arrival_date = result['arrival_date'].values[0]  # Дата прибытия
+        # Проверяем длину кода
+        if len(track_code) <= 9:
+            await update.message.reply_text("❌ Лутфан трек-код ворид кунед, на телефон рақам!")
+            return
 
-        if status_khujand:
-            response = f"Бори Шумо бо трек-коди {track_code} ба Хучанд омадааст, мунтазири занг шавед."
-        elif status_china:
-            response = f"Бори Шумо бо трек-коди {track_code} ба склади Хитой санаи {arrival_date} кабул шудааст ва рузхои наздик ба Хучанд омада мерасад."
+        # Ищем трек-код в данных
+        result = data[data['code'].astype(str) == track_code]
+
+        if not result.empty:
+            await update.message.reply_text(f"📦 Маълумот ёфт шуд! Статус: {result.iloc[0]['status']}")
         else:
-            response = f"Бори Шумо бо трек-коди {track_code} холо ба склади Хитой кабул нашуааст."
-    else:
-        response = f"Маълумот ёфт нашуд! Лутфан рақами дурустро ворид кунед."
+            await update.message.reply_text("❌ Маълумот ёфт нашуд! Лутфан рақами дурустро ворид кунед.")
 
-    logger.info(f"Ответ: {response}")
-    await update.message.reply_text(response)
+    except Exception as e:
+        await update.message.reply_text(f"⚠ Хатогӣ рух дод: {str(e)}")
+        print(f"Ошибка: {str(e)}")
 
 
 
