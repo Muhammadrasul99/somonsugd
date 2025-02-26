@@ -104,8 +104,18 @@ async def check_track_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
     await update.message.reply_text(response)
 
-# Функция поиска товаров по номеру телефона
+
+# Обработка кнопки "Борҳои қабулшуда 🔍"
+async def request_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text("Рақами телефони худро ворид кунед:")
+    context.user_data['waiting_for_phone'] = True  # Ожидаем ввод номера телефона
+
+# Проверка товаров по номеру телефона
 async def check_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not context.user_data.get('waiting_for_phone'):  # Если не ждем телефон, это не телефон, а трек-код
+        await check_track_code(update, context)
+        return
+
     phone_number = update.message.text.strip()
     logger.info(f"Проверка товаров по номеру: {phone_number}")
 
@@ -122,12 +132,13 @@ async def check_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                 f"📏 Куб: {row['volume']}\n"
                 f"💰 Сумма (TJS): {row['amount']}\n"
                 f"📅 Дата прибытия: {row['arrival_date']}\n"
-                "----------------------\n"
             )
     else:
-        response = "❌ Маълумот ёфт нашуд! Лутфан рақами дурустро ворид кунед."
+        response = "❌ Бори Шумо бо ин раками телефон кабул нашудааст."
 
     await update.message.reply_text(response)
+    context.user_data['waiting_for_phone'] = False  # Сбрасываем ожидание номера телефона
+
 
 # Главная функция
 def main():
