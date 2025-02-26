@@ -82,7 +82,7 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
         # Попробуем сначала поискать в products.csv
         product_data = load_product_data()
-        product_result = product_data[product_data['code'] == text]
+        product_result = product_data[product_data['phone'] == text]
 
         if not product_result.empty:
             # Если нашли запись в products.csv, формируем ответ
