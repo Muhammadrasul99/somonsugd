@@ -73,32 +73,32 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text(response)
 
     elif text == "Борҳои қабулшуда 🔍":
-    # Предлагаем ввести номер телефона
-    await update.message.reply_text("Рақами телефони худро ворид кунед:")
-else:
-    # Загружаем данные из products.csv
-    product_data = load_product_data()
-
-    # Ищем все товары по введённому номеру телефона
-    phone_result = product_data[product_data['phone'] == text]
-
-    if not phone_result.empty:
-        response = f"📲 Информация о товарах для номера {text}:\n"
-        for _, row in phone_result.iterrows():
-            response += (
-                f"\n📦 Код товара: {row['code']}\n"
-                f"👤 Имя: {row['name']}\n"
-                f"📦 Шт: {row['quantity']}\n"
-                f"⚖️ Кг: {row['weight']}\n"
-                f"📏 Куб: {row['volume']}\n"
-                f"💰 Сумма (TJS): {row['amount']}\n"
-                f"📅 Дата прибытия: {row['arrival_date']}\n"
-                "----------------------"
-            )
-        await update.message.reply_text(response)
+        await update.message.reply_text("Рақами телефони худро ворид кунед:")
 
     else:
-        await update.message.reply_text("❌ Маълумот ёфт нашуд! Лутфан рақами дурустро ворид кунед.")
+        # Загружаем данные из products.csv
+        product_data = load_product_data()
+
+        # Ищем все товары по введённому номеру телефона
+        phone_result = product_data[product_data['phone'].astype(str) == text]
+
+        if not phone_result.empty:
+            response = f"📲 Информация о товарах для номера {text}:\n"
+            for _, row in phone_result.iterrows():
+                response += (
+                    f"\n📦 Код товара: {row['code']}\n"
+                    f"👤 Имя: {row['name']}\n"
+                    f"📦 Шт: {row['quantity']}\n"
+                    f"⚖️ Кг: {row['weight']}\n"
+                    f"📏 Куб: {row['volume']}\n"
+                    f"💰 Сумма (TJS): {row['amount']}\n"
+                    f"📅 Дата прибытия: {row['arrival_date']}\n"
+                    "----------------------"
+                )
+            await update.message.reply_text(response)
+        else:
+            await update.message.reply_text("❌ Маълумот ёфт нашуд! Лутфан рақами дурустро ворид кунед.")
+
 
 
 
