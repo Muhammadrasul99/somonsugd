@@ -105,29 +105,33 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 # Функция для проверки трек-кода
 # Функция для проверки трек-кода
 async def check_track_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    track_code = update.message.text
+    track_code = update.message.text.strip()  # Удаляем лишние пробелы
     logger.info(f"Получен трек-код: {track_code}")
 
-    # Выполняем поиск трек-кода
-    result = data[data['code'] == track_code]
+    # Выведем названия всех колонок, чтобы убедиться, что 'code' существует
+    logger.info(f"Названия колонок: {data.columns.tolist()}")
+
+    # Проверяем, есть ли трек-код в базе
+    result = data[data['code'].astype(str) == track_code]
     logger.info(f"Результат поиска: {result}")
 
     if not result.empty:
         status_china = result['china'].values[0]
         status_khujand = result['khujand'].values[0]
-        arrival_date = result['arrival_date'].values[0]  # Извлекаем дату прибытия на склад
+        arrival_date = result['arrival_date'].values[0]  # Дата прибытия
 
         if status_khujand:
             response = f"Бори Шумо бо трек-коди {track_code} ба Хучанд омадааст, мунтазири занг шавед."
         elif status_china:
-            response = (f"Бори Шумо бо трек-коди {track_code} ба склади Хитой санаи {arrival_date} кабул шудааст ва рузхои наздик ба Хучанд омада мерасад.")
+            response = f"Бори Шумо бо трек-коди {track_code} ба склади Хитой санаи {arrival_date} кабул шудааст ва рузхои наздик ба Хучанд омада мерасад."
         else:
             response = f"Бори Шумо бо трек-коди {track_code} холо ба склади Хитой кабул нашуааст."
     else:
-        response = f"Бори Шумо бо трек-коди {track_code} холо ба склади Хитой кабул нашуааст."
+        response = f"Маълумот ёфт нашуд! Лутфан рақами дурустро ворид кунед."
 
     logger.info(f"Ответ: {response}")
     await update.message.reply_text(response)
+
 
 
 
