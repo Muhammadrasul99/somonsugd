@@ -147,8 +147,11 @@ def main():
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
 
-    # Регистрируем обработчик сообщений с кнопок и трек-кодов
+    # Обработчик для кнопок
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_buttons))
+
+    # Обработчик для ввода трек-кода
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, check_track_code))
 
     # Запускаем бота
     application.run_polling()
