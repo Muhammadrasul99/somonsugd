@@ -73,34 +73,32 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text(response)
 
     elif text == "Борҳои қабулшуда 🔍":
-        # Предлагаем ввести код из products.csv
-        await update.message.reply_text("Рамзи худро ворид кунед:")
-    else:
-        # Здесь обрабатываем введённый текст, который может быть:
-        # - трек-кодом (data.csv)
-        # - кодом товара (products.csv)
+    # Предлагаем ввести номер телефона
+    await update.message.reply_text("Рақами телефони худро ворид кунед:")
+else:
+    # Загружаем данные из products.csv
+    product_data = load_product_data()
 
-        # Попробуем сначала поискать в products.csv
-        product_data = load_product_data()
-        product_result = product_data[product_data['phone'] == text]
+    # Ищем все товары по введённому номеру телефона
+    phone_result = product_data[product_data['phone'] == text]
 
-        if not product_result.empty:
-            # Если нашли запись в products.csv, формируем ответ
-            product_info = product_result.iloc[0]
-            response = (
-                f"Информация о товаре с кодом {text}:\n"
-                f"Имя: {product_info['name']}\n"
-                f"Телефон: {product_info['phone']}\n"
-                f"Шт: {product_info['quantity']}\n"
-                f"Кг: {product_info['weight']}\n"
-                f"Куб: {product_info['volume']}\n"
-                f"Сумма (TJS): {product_info['amount']}\n"
-                f"Дата прибытия: {product_info['arrival_date']}"
+    if not phone_result.empty:
+        response = f"📲 Информация о товарах для номера {text}:\n"
+        for _, row in phone_result.iterrows():
+            response += (
+                f"\n📦 Код товара: {row['code']}\n"
+                f"👤 Имя: {row['name']}\n"
+                f"📦 Шт: {row['quantity']}\n"
+                f"⚖️ Кг: {row['weight']}\n"
+                f"📏 Куб: {row['volume']}\n"
+                f"💰 Сумма (TJS): {row['amount']}\n"
+                f"📅 Дата прибытия: {row['arrival_date']}\n"
+                "----------------------"
             )
-            await update.message.reply_text(response)
-        else:
-            # Если не нашли в products.csv, проверяем data.csv (трекинг)
-            await check_track_code(update, context)
+        await update.message.reply_text(response)
+
+    else:
+        await update.message.reply_text("❌ Маълумот ёфт нашуд! Лутфан рақами дурустро ворид кунед.")
 
 
 
