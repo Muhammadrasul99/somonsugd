@@ -112,7 +112,7 @@ async def request_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 # Проверка товаров по номеру телефона
 async def check_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    if not context.user_data.get('waiting_for_phone'):  # Если не ждем телефон, это не телефон, а трек-код
+    if not context.user_data.get('waiting_for_phone'):  # Если не ждем телефон, проверяем как трек-код
         await check_track_code(update, context)
         return
 
@@ -132,6 +132,7 @@ async def check_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                 f"📏 Куб: {row['volume']}\n"
                 f"💰 Сумма (TJS): {row['amount']}\n"
                 f"📅 Дата прибытия: {row['arrival_date']}\n"
+                "----------------------\n"
             )
     else:
         response = "❌ Бори Шумо бо ин раками телефон кабул нашудааст."
@@ -149,11 +150,12 @@ def main():
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
 
-    # Обработчики сообщений
-    application.add_handler(MessageHandler(filters.Regex("Тафтиши трек-код 🔍"), handle_buttons))
-    application.add_handler(MessageHandler(filters.Regex("Борҳои қабулшуда 🔍"), handle_buttons))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, check_track_code))
+     # Исправленные обработчики кнопок
+    application.add_handler(MessageHandler(filters.Regex("Борҳои қабулшуда 🔍"), request_phone))
+
+    # Сначала проверяем телефон, затем трек-код
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, check_phone))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, check_track_code))
 
     application.run_polling()
 
