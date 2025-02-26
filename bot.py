@@ -84,27 +84,7 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     elif text == "Борҳои қабулшуда 🔍":
         await update.message.reply_text("Рақами телефони худро ворид кунед:")
 
-    else:
-        product_data = load_product_data()
-        phone_result = product_data[product_data['phone'].astype(str) == text]
-
-        if not phone_result.empty:
-            response = f"📲 Информация о товарах для номера {text}:\n"
-            for _, row in phone_result.iterrows():
-                response += (
-                    f"👤 Имя: {row['name']}\n"
-                    f"📦 Шт: {row['quantity']}\n"
-                    f"⚖️ Кг: {row['weight']}\n"
-                    f"📏 Куб: {row['volume']}\n"
-                    f"💰 Сумма (TJS): {row['amount']}\n"
-                    f"📅 Дата прибытия: {row['arrival_date']}\n"
-                    "----------------------"
-                )
-            await update.message.reply_text(response)
-        else:
-            await update.message.reply_text("❌ Маълумот ёфт нашуд! Лутфан рақами дурустро ворид кунед.")
-
-# Функция для проверки трек-кода
+    # Функция для проверки трек-кода
 async def check_track_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     track_code = update.message.text.strip()
     logger.info(f"Получен трек-код: {track_code}")
@@ -132,6 +112,29 @@ async def check_track_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         response = f"📦 Бори шумо бо трек-коди {track_code} ёфт нашуд."
 
     await update.message.reply_text(response)
+    
+
+    else:
+        product_data = load_product_data()
+        phone_result = product_data[product_data['phone'].astype(str) == text]
+
+        if not phone_result.empty:
+            response = f"📲 Информация о товарах для номера {text}:\n"
+            for _, row in phone_result.iterrows():
+                response += (
+                    f"👤 Имя: {row['name']}\n"
+                    f"📦 Шт: {row['quantity']}\n"
+                    f"⚖️ Кг: {row['weight']}\n"
+                    f"📏 Куб: {row['volume']}\n"
+                    f"💰 Сумма (TJS): {row['amount']}\n"
+                    f"📅 Дата прибытия: {row['arrival_date']}\n"
+                    "----------------------"
+                )
+            await update.message.reply_text(response)
+        else:
+            await update.message.reply_text("❌ Маълумот ёфт нашуд! Лутфан рақами дурустро ворид кунед.")
+
+
 
 
 # Главная функция
