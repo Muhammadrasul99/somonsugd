@@ -16,7 +16,7 @@ try:
     logger.info("Данные успешно загружены из data.csv")
 except Exception as e:
     logger.error(f"Ошибка при загрузке данных из data.csv: {e}")
-    data = pd.DataFrame()  # Если ошибка, создаем пустой DataFrame
+    data = pd.DataFrame()
 
 # Функция для загрузки данных о товарах из products.csv
 def load_product_data():
@@ -26,7 +26,7 @@ def load_product_data():
         return product_data
     except Exception as e:
         logger.error(f"Ошибка при загрузке данных о товарах из products.csv: {e}")
-        return pd.DataFrame()  # Возвращаем пустой DataFrame при ошибке
+        return pd.DataFrame()
 
 # Функция для команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -40,10 +40,20 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
     await update.message.reply_text(
-        'Хуш омадед ба Telegram боти  Сомон Сугд Карго. Ман ба шумо дар ёфтани суроғаҳои анбор, '
+        'Хуш омадед ба Telegram боти Сомон Сугд Карго. Ман ба шумо дар ёфтани суроғаҳои анбор, '
         'санҷидани трек код ва бо нархҳо шинос шудан кӯмак мекунам', 
         reply_markup=reply_markup
     )
+
+# Функция для команды /help
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Отправляет сообщение с описанием команд."""
+    help_text = (
+        "/start - Запустить бота\n"
+        "/help - Показать это сообщение\n"
+        "Вы также можете использовать кнопки для навигации."
+    )
+    await update.message.reply_text(help_text)
 
 # Функция для обработки сообщений с кнопок
 async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -52,12 +62,10 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     if text == "Сурогаи склад роҳ  🚚":
         response = "1) AL-KH \n2)13711652794\n3) 广州市荔湾区环市西路黑山三街20号宇宙鞋城E区113-119档8 Al-Kh /Шахр/Ном ва номери телефон"
         await update.message.reply_text(response)
-        await update.message.reply_photo("https://raw.githubusercontent.com/uskhurshed/cargo/master/photo_2024-10-08_19-49-26.jpg")
 
     elif text == "Нархнома 💲":
-        response = "РОҲ\n> Аз 1кг то 40кг  - 3$ \n> Аз 40кг зиёд  - 2,8$\n> Аз 100кг зиёд алохида нарх дода мешавад\n> Аз 1куб 300$\n\nАВИА\n\nСрок доставки: 7-13 дней 🚀\n• 10$\кг\n• До 31.12.2024 — всего 9$\кг 🎉"
+        response = "РОҲ\n> Аз 1кг то 40кг  - 3$ \n> Аз 40кг зиёд  - 2,8$\n> Аз 100кг зиёд алохида нарх дода мешавад\n> Аз 1куб 300$"
         await update.message.reply_text(response)
-        await update.message.reply_photo("https://raw.githubusercontent.com/uskhurshed/cargo/master/Нарх2.png")
 
     elif text == "Молҳои манъшуда ❌":
         response = "🚫 Лекарства, жидкости, ножи, электронные сигареты, телефоны, ноутбуки и т.д. запрещены для перевозки."
@@ -77,10 +85,7 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text("Рақами телефони худро ворид кунед:")
 
     else:
-        # Загружаем данные из products.csv
         product_data = load_product_data()
-
-        # Ищем все товары по введённому номеру телефона
         phone_result = product_data[product_data['phone'].astype(str) == text]
 
         if not phone_result.empty:
@@ -126,7 +131,6 @@ async def check_track_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         response = f"📦 Бори шумо бо трек-коди {track_code} ёфт нашуд."
 
     await update.message.reply_text(response)
-
 
 
 # Главная функция
