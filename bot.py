@@ -63,13 +63,13 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
     if text == "Сурогаи склад роҳ 🚚":
         response = "1) AL-KH \n2)13711652794\n3) 广州市荔湾区环市西路黑山三街20号宇宙鞋城E区113-119档8 Al-Kh /Шахр/Ном ва номери телефон"
-        await update.message.reply_photo("https://raw.githubusercontent.com/Muhammadrasul99/cargo/master/photo_2024-10-08_19-49-26.jpg")
+        await update.message.reply_photo("https://raw.githubusercontent.com/Muhammadrasul99/somonsugd/master/photo_2024-10-08_19-49-26.jpg")
     elif text == "Сурогаи склад авиа ✈️":
         response = "Avia / Ном ВА номери шумо \n19068507113\n浙江省 金华市 义乌市\n桥东二区34栋8号 1 avia Al-Kh / Шахр Ном ВА немери шумо"
-        await update.message.reply_photo("https://raw.githubusercontent.com/Muhammadrasul99/cargo/master/photo_5406973989118667037_y.jpg")
+        await update.message.reply_photo("https://raw.githubusercontent.com/Muhammadrasul99/somonsugd/master/photo_5406973989118667037_y.jpg")
     elif text == "Нархнома 💲":
         response = "РОҲ\n> Аз 1кг то 40кг  - 3$ \n> Аз 40кг зиёд  - 2,8$\n> Аз 100кг зиёд алохида нарх дода мешавад\n> Аз 1куб 300$\n\nАВИА\n\nСрок доставки: 7-13 дней 🚀\n• 10$\кг\n• До 31.12.2024 — всего 9$\кг 🎉"
-        await update.message.reply_photo("https://raw.githubusercontent.com/Muhammadrasul99/cargo/master/Нарх2.png")
+        await update.message.reply_photo("https://raw.githubusercontent.com/Muhammadrasul99/somonsugd/master/Нарх2.png")
     elif text == "Молҳои манъшуда ❌":
         response = "ЗАПРЕЩЕННЫЕ ТОВАРЫ\nНЕЛЬЗЯ 🚫 ЗАКАЗАТЬ ИЗ КИТАЯ , ДАННЫЙ МОМЕНТ ПРОВЕРКА ИДЕТ ТЩАТЕЛЬНО ‼️\nЗапрещенные товары \n🚫 Лекарственное средство (порошок, таблетки, жидкие лекарства)\n🚫 Все виды жидких веществ (парфюм, ароматизаторы и тд)\n🚫 Все виды холодного оружия (ножи, электрошокеры , биты и т.д)\n 🚫 Не принимаем электронные сигареты, кальяны и т.д\n🚫 ТОВАРЫ С ПРИЗНАКАМИ 18+ \n🚫 Смартфон ( телефоны ) и ноутбук\n\nЗапрещенные вещи для перевозки в АВИАции, пожалуйста, соблюдайте правила.\nЗапрещенные вещи 🚫\nХолодное оружие 🗡️\nХимические вещества 🧪\nБаллон с дихлофосом (газ) 🧴\nВещи 18+ 🔞\nЛюбые опасные предметы ⚠️\nС аккумуляторами 🔋\nВсе эти вещи запрещены ❌"
     elif text == "Контакт 👤":
