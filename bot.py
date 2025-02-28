@@ -85,13 +85,14 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         response = "Контакт : www.instagram.com/somon_sugd_cargo \n Телефон +992990050500 Whatsapp, Telegram "
         await update.message.reply_text(response)
 
-    elif text == "Тафтиши трек-код 🔍":
-        response = "Трек-коди худро ворид намоед:"
-        await update.message.reply_text(response)
-
+     elif text == "Тафтиши трек-код 🔍":
+        await update.message.reply_text("Трек-коди худро ворид намоед:")
+        return
     elif text == "Дарси ройгон!":
-        response = " Дарсхои ройгонро аз инчо дастрас кунед: https://t.me/somon_sugd_cargo/31"
-        await update.message.reply_text(response)
+        response = "Дарсхои ройгонро дастрас кунед: https://t.me/somon_sugd_cargo/31"
+    elif text == "Борҳои қабулшуда 🔍":
+        await update.message.reply_text("Рақами телефони худро ворид кунед:")
+        return
     elif text == "Борҳои қабулшуда 🔍":
         await update.message.reply_text("Рақами телефони худро ворид кунед:")
         return
