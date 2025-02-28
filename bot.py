@@ -143,7 +143,7 @@ async def check_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
 # Главная функция
 def main():
-    TOKEN = '8174740222:AAFXj35riRMhfGf8ATDXMcOAJ9KlJ9ZoBlY'
+     TOKEN = '8174740222:AAFXj35riRMhfGf8ATDXMcOAJ9KlJ9ZoBlY'
 
     application = Application.builder().token(TOKEN).build()
 
