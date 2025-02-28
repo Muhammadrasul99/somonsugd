@@ -83,7 +83,7 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text("Рақами телефони худро ворид кунед:")
         return
     else:
-        response = None  # Если нет совпадения, ничего не отправляем
+        await check_track_code(update, context)
 
     if response:
         await update.message.reply_text(response)
