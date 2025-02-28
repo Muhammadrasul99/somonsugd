@@ -18,7 +18,6 @@ except Exception as e:
     logger.error(f"Ошибка при загрузке data.csv: {e}")
     data = pd.DataFrame()
 
-
 def load_product_data():
     try:
         product_data = pd.read_csv('products.csv', encoding='latin1', delimiter=';')
@@ -27,7 +26,6 @@ def load_product_data():
     except Exception as e:
         logger.error(f"Ошибка при загрузке products.csv: {e}")
         return pd.DataFrame()
-
 
 # Функция команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -45,7 +43,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         reply_markup=reply_markup
     )
 
-
 # Функция команды /help
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     help_text = (
@@ -54,7 +51,6 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         "Вы также можете использовать кнопки для навигации."
     )
     await update.message.reply_text(help_text)
-
 
 # Функция обработки кнопок
 async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -82,7 +78,6 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     if response:
         await update.message.reply_text(response)
 
-
 # Функция проверки трек-кода
 async def check_track_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     track_code = update.message.text.strip()
@@ -102,9 +97,10 @@ async def check_track_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         if status_khujand:
             response = f"📦 Бори шумо бо трек-коди {track_code} ба Хучанд омадааст."
         elif status_china:
-            response = f"📦 Бори Шумо бо трек-коди {track_code} ба склади Хитой санаи {arrival_date} кабул шудааст ва рузхои наздик ба Хучанд омада мерасад."
+            response = f"📦 Бори Шумо бо трек-коди {track_code} ба склади Хитой санаи {arrival_date} кабул шудааст ва рузхои наздик ба Хучанд омада мерасад."    
     else:
-        response = f"📦 Бори шумо ҳоло бо трек-коди {track_code} ба склади Хитой кабул нашудааст."
+            response = f"📦 Бори шумо ҳоло бо трек-коди {track_code} ба склади Хитой кабул нашудааст."
+    
 
     await update.message.reply_text(response)
 
@@ -113,7 +109,6 @@ async def check_track_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 async def request_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text("Рақами телефони худро ворид кунед:")
     context.user_data['waiting_for_phone'] = True  # Ожидаем ввод номера телефона
-
 
 # Проверка товаров по номеру телефона
 async def check_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -155,11 +150,12 @@ def main():
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
 
-    # Обработчик для кнопки "Борҳои қабулшуда 🔍"
+     # Исправленные обработчики кнопок
     application.add_handler(MessageHandler(filters.Regex("Борҳои қабулшуда 🔍"), request_phone))
 
-    # Общий обработчик текстовых сообщений
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
+    # Сначала проверяем телефон, затем трек-код
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, check_phone))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, check_track_code))
 
     application.run_polling()
 
