@@ -32,8 +32,8 @@ def load_product_data():
 # Функция команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     keyboard = [
-        ["Сурогаи склад роҳ  🚚", "Сурогаи склад авиа ✈️"],
-        [ "Нархнома 💲", "Молҳои манъшуда ❌"],
+        ["Сурогаи склад роҳ 🚚", "Сурогаи склад авиа ✈️"],
+        ["Нархнома 💲", "Молҳои манъшуда ❌"],
         ["Контакт 👤", "Дарси ройгон!"],
         ["Тафтиши трек-код 🔍","Борҳои қабулшуда 🔍"]
     ]
@@ -61,7 +61,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     text = update.message.text.strip()
 
-    if text == "Сурогаи склад роҳ  🚚":
+    if text == "Сурогаи склад роҳ 🚚":
         response = "1) AL-KH \n2)13711652794\n3) 广州市荔湾区环市西路黑山三街20号宇宙鞋城E区113-119档8 Al-Kh /Шахр/Ном ва номери телефон"
         await update.message.reply_photo("https://raw.githubusercontent.com/Muhammadrasul99/cargo/master/photo_2024-10-08_19-49-26.jpg")
     elif text == "Сурогаи склад авиа ✈️":
