@@ -162,7 +162,6 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         return
 
     # Если текст похож на трек-код (например, состоит из цифр и имеет определенную длину)
-    if text.isdigit() and len(text) == 10:  # Пример: трек-код длиной 10 цифр
         await check_track_code(update, context)
         return
 
