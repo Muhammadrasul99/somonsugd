@@ -150,14 +150,14 @@ def main():
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
 
-     # Исправленные обработчики кнопок
+    # Обработчик для кнопки "Борҳои қабулшуда 🔍"
     application.add_handler(MessageHandler(filters.Regex("Борҳои қабулшуда 🔍"), request_phone))
 
-    # Сначала проверяем телефон, затем трек-код
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, check_phone))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, check_track_code))
+    # Общий обработчик текстовых сообщений
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
 
     application.run_polling()
+
 
 if __name__ == '__main__':
     main()
