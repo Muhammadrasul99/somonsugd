@@ -153,20 +153,37 @@ async def check_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
 
 # Общий обработчик текстовых сообщений
+async def request_track_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text("Трек-коди худро ворид намоед:")
+    context.user_data['waiting_for_code'] = True  # Ожидаем ввод трек-кода
+
+
+# Общий обработчик текстовых сообщений
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     text = update.message.text.strip()
+    logger.info(f"Получен текст: {text}")
 
     # Если ожидается ввод номера телефона
     if context.user_data.get('waiting_for_phone'):
+        logger.info("Ожидается ввод номера телефона")
         await check_phone(update, context)
         return
 
-    # Если текст похож на трек-код (например, состоит из цифр и имеет определенную длину)
-    if text.isdigit() and len(text) == 10:  # Пример: трек-код длиной 10 цифр
+    # Если ожидается ввод трек-кода
+    if context.user_data.get('waiting_for_code'):
+        logger.info("Ожидается ввод трек-кода")
+        context.user_data['waiting_for_code'] = False  # Сбрасываем состояние
+        await check_track_code(update, context)
+        return
+
+    # Если текст похож на трек-код (состоит из цифр)
+    if text.isdigit():  # Убрали проверку длины, чтобы обрабатывать любые трек-коды из цифр
+        logger.info(f"Текст похож на трек-код: {text}")
         await check_track_code(update, context)
         return
 
     # Если текст не является трек-кодом, обрабатываем как кнопку
+    logger.info("Текст не является трек-кодом, обрабатываем как кнопку")
     await handle_buttons(update, context)
 
 
@@ -181,12 +198,3 @@ def main():
 
     # Обработчик для кнопки "Борҳои қабулшуда 🔍"
     application.add_handler(MessageHandler(filters.Regex("Борҳои қабулшуда 🔍"), request_phone))
-
-    # Общий обработчик текстовых сообщений
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
-
-    application.run_polling()
-
-
-if __name__ == '__main__':
-    main()
