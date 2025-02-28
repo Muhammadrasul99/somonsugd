@@ -35,14 +35,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         ["Сурогаи склад роҳ 🚚", "Сурогаи склад авиа ✈️"],
         ["Нархнома 💲", "Молҳои манъшуда ❌"],
         ["Контакт 👤", "Дарси ройгон!"],
-        ["Тафтиши трек-код 🔍","Борҳои қабулшуда 🔍"]
+        ["Тафтиши трек-код 🔍", "Борҳои қабулшуда 🔍"]
     ]
 
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
     await update.message.reply_text(
         'Хуш омадед ба Telegram боти Сомон Сугд Карго. Ман ба шумо дар ёфтани суроғаҳои анбор, '
-        'санҷидани трек код ва бо нархҳо шинос шудан кӯмак мекунам', 
+        'санҷидани трек код ва бо нархҳо шинос шудан кӯмак мекунам',
         reply_markup=reply_markup
     )
 
@@ -78,9 +78,11 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         response = "Дарсхои ройгонро дастрас кунед: https://t.me/somon_sugd_cargo/31"
     elif text == "Тафтиши трек-код 🔍":
         await update.message.reply_text("Трек-коди худро ворид намоед:")
+        context.user_data['waiting_for_code'] = True  # Ожидаем ввод трек-кода
         return
     elif text == "Борҳои қабулшуда 🔍":
         await update.message.reply_text("Рақами телефони худро ворид кунед:")
+        context.user_data['waiting_for_phone'] = True  # Ожидаем ввод номера телефона
         return
     else:
         response = None  # Если нет совпадения, ничего не отправляем
@@ -115,12 +117,6 @@ async def check_track_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     await update.message.reply_text(response)
 
 
-# Обработка кнопки "Борҳои қабулшуда 🔍"
-async def request_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text("Рақами телефони худро ворид кунед:")
-    context.user_data['waiting_for_phone'] = True  # Ожидаем ввод номера телефона
-
-
 # Проверка товаров по номеру телефона
 async def check_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not context.user_data.get('waiting_for_phone'):  # Если не ждем телефон, проверяем как трек-код
@@ -153,37 +149,26 @@ async def check_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
 
 # Общий обработчик текстовых сообщений
-async def request_track_code(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text("Трек-коди худро ворид намоед:")
-    context.user_data['waiting_for_code'] = True  # Ожидаем ввод трек-кода
-
-
-# Общий обработчик текстовых сообщений
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     text = update.message.text.strip()
-    logger.info(f"Получен текст: {text}")
 
     # Если ожидается ввод номера телефона
     if context.user_data.get('waiting_for_phone'):
-        logger.info("Ожидается ввод номера телефона")
         await check_phone(update, context)
         return
 
     # Если ожидается ввод трек-кода
     if context.user_data.get('waiting_for_code'):
-        logger.info("Ожидается ввод трек-кода")
         context.user_data['waiting_for_code'] = False  # Сбрасываем состояние
         await check_track_code(update, context)
         return
 
-    # Если текст похож на трек-код (состоит из цифр)
-    if text.isdigit():  # Убрали проверку длины, чтобы обрабатывать любые трек-коды из цифр
-        logger.info(f"Текст похож на трек-код: {text}")
+    # Если текст похож на трек-код (например, состоит из цифр и имеет определенную длину)
+    if text.isdigit() and len(text) == 10:  # Пример: трек-код длиной 10 цифр
         await check_track_code(update, context)
         return
 
     # Если текст не является трек-кодом, обрабатываем как кнопку
-    logger.info("Текст не является трек-кодом, обрабатываем как кнопку")
     await handle_buttons(update, context)
 
 
@@ -198,3 +183,15 @@ def main():
 
     # Обработчик для кнопки "Борҳои қабулшуда 🔍"
     application.add_handler(MessageHandler(filters.Regex("Борҳои қабулшуда 🔍"), request_phone))
+
+    # Обработчик для кнопки "Тафтиши трек-код 🔍"
+    application.add_handler(MessageHandler(filters.Regex("Тафтиши трек-код 🔍"), handle_buttons))
+
+    # Общий обработчик текстовых сообщений
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
+
+    application.run_polling()
+
+
+if __name__ == '__main__':
+    main()
