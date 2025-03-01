@@ -32,10 +32,10 @@ def load_product_data():
 # Функция команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     keyboard = [
-        ["Сурогаи склад роҳ 🚚", "Сурогаи склад авиа ✈️"],
+        ["Сурогаи склад роҳ 🚚", "Дарси ройгон!"],
         ["Нархнома 💲", "Молҳои манъшуда ❌"],
-        ["Контакт 👤", "Дарси ройгон!"],
-        ["Тафтиши трек-код 🔍","Борҳои қабулшуда 🔍"]
+        ["Контакт 👤", "Тафтиши трек-код 🔍"],
+        ["Борҳои қабулшуда 🔍"]
     ]
 
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
@@ -64,9 +64,9 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     if text == "Сурогаи склад роҳ 🚚":
         response = "1) AL-KH \n2)13711652794\n3) 广州市荔湾区环市西路黑山三街20号宇宙鞋城E区113-119档8 Al-Kh /Шахр/Ном ва номери телефон"
         await update.message.reply_photo("https://raw.githubusercontent.com/Muhammadrasul99/somonsugd/master/photo_2024-10-08_19-49-26.jpg")
-    elif text == "Сурогаи склад авиа ✈️":
-        response = "Avia / Ном ВА номери шумо \n19068507113\n浙江省 金华市 义乌市\n桥东二区34栋8号 1 avia Al-Kh / Шахр Ном ВА немери шумо"
-        await update.message.reply_photo("https://raw.githubusercontent.com/Muhammadrasul99/somonsugd/master/photo_5406973989118667037_y.jpg")
+    #elif text == "Сурогаи склад авиа ✈️":
+        #response = "Avia / Ном ВА номери шумо \n19068507113\n浙江省 金华市 义乌市\n桥东二区34栋8号 1 avia Al-Kh / Шахр Ном ВА немери шумо"
+        #await update.message.reply_photo("https://raw.githubusercontent.com/Muhammadrasul99/somonsugd/master/photo_5406973989118667037_y.jpg")
     elif text == "Нархнома 💲":
         response = "РОҲ\n> Аз 1кг то 40кг  - 3$ \n> Аз 40кг зиёд  - 2,8$\n> Аз 100кг зиёд алохида нарх дода мешавад\n> Аз 1куб 300$\n\nАВИА\n\nСрок доставки: 7-13 дней 🚀\n• 10$\кг\n• До 31.12.2024 — всего 9$\кг 🎉"
         await update.message.reply_photo("https://raw.githubusercontent.com/Muhammadrasul99/somonsugd/master/Нарх2.png")
