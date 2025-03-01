@@ -137,7 +137,7 @@ async def check_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         response = f"📲 Информация о товарах для номера {phone_number}:\n"
         for _, row in phone_result.iterrows():
             response += (
-                f"👤 Номер: {row['number']}\n"
+                f"#⃣ Номер: {row['number']}\n"
                 f"👤 Имя: {row['name']}\n"
                 f"📦 Шт: {row['quantity']}\n"
                 f"⚖️ Кг: {row['weight']}\n"
