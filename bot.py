@@ -147,7 +147,7 @@ async def check_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                 "----------------------\n"
             )
     else:
-        response = "❌ Бори Шумо бо ин раками телефон кабул нашудааст."
+        response = "❌ Холо бо ин раками телефон ба склади Хуҷанд бор кабул нашудааст."
 
     await update.message.reply_text(response)
     context.user_data['waiting_for_phone'] = False  # Сбрасываем ожидание номера телефона
